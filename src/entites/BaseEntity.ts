@@ -1,12 +1,12 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Timestamp } from 'typeorm';
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export class BaseEntity {
-  @CreateDateColumn({ type: 'timestamp', name: 'CREATED_AT' })
-  createdAt: Timestamp;
+export abstract class BaseEntity {
+  @PrimaryGeneratedColumn({ type: 'bigint', name: 'SEQ' })
+  seq: number;
 
-  @Column({ type: 'timestamp', name: 'UPDATED_AT', default: () => 'CURRENT_TIMESTAMP' })
-  updatedAt: Timestamp;
+  @CreateDateColumn({ type: 'timestamp', name: 'REG_DATE' })
+  regDate: Date;
 
-  @DeleteDateColumn({ type: 'datetime', name: 'DELETED_AT', select: false })
-  deletedAt: Timestamp;
+  @UpdateDateColumn({ type: 'timestamp', name: 'MOD_DATE' })
+  modDate: Date;
 }

@@ -13,7 +13,7 @@ async function bootstrap() {
     origin: true
   });
   app.setGlobalPrefix('api/v1');
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3002;
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true
@@ -22,7 +22,15 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new StandardResponseInterceptor());
-  const config = new DocumentBuilder().addServer('api/v1').setTitle('API').setDescription('API 문서입니다.').setVersion('1.0').addBearerAuth().build();
+  const config = new DocumentBuilder()
+    .addServer('api/v1')
+    .setTitle('API')
+    .setDescription('API 문서입니다.')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('user', '회원 관련')
+    .addTag('auth', '회원 인증 관련')
+    .build();
   const document = SwaggerModule.createDocument(app, config, { ignoreGlobalPrefix: true });
   SwaggerModule.setup('docs', app, document);
 

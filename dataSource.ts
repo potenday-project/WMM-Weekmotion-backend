@@ -10,7 +10,7 @@ const dataSource = new DataSource({
   entities: [],
   migrations: [__dirname + '/src/migrations/*.ts'],
   charset: 'utf8mb4',
-  synchronize: false,
+  synchronize: true,
   logging: true
 });
 
