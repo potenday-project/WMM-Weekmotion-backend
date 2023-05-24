@@ -4,6 +4,9 @@ import { TagCategory } from './TagCategory';
 
 @Entity('TAG')
 export class Tag extends BaseEntity {
+  @Column({ type: 'varchar', length: 50, name: 'TAG_CODE' })
+  tagCode: string;
+
   @Column({ type: 'varchar', length: 50, name: 'TAG_NAME' })
   tagName: string;
 

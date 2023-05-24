@@ -12,6 +12,7 @@ import { TagCategory } from './entites/TagCategory';
 import { DiaryTagGroup } from './entites/DiaryTagGroup';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Diary, Tag, TagCategory],
+      entities: [User, Diary, DiaryTagGroup, Tag, TagCategory],
       charset: 'utf8mb4',
       autoLoadEntities: true,
       synchronize: true,
@@ -31,7 +32,8 @@ import { AuthModule } from './auth/auth.module';
       keepConnectionAlive: true
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    DiaryModule
   ],
   controllers: [AppController],
   providers: [AppService]
