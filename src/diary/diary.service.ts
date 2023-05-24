@@ -120,24 +120,26 @@ export class DiaryService {
     const queryRunner = this.datasource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    let savedDiary;
 
     try {
-      savedDiary = await queryRunner.manager.getRepository(Diary).update({ seq: user.seq }, diary);
+      await queryRunner.manager.getRepository(Diary).update({ seq: seq }, diary);
 
       if (updateDiaryDto.tags.length > 0) {
-        for (const tag of updateDiaryDto.tags) {
-          const diaryTagGroup = tag.toEntity();
-          if (!tag.seq) {
-            diaryTagGroup.diarySeq = savedDiary.seq;
+        for (const tagDto of updateDiaryDto.tags) {
+          const diaryTagGroup = new DiaryTagGroup();
+          if (!tagDto.seq) {
+            diaryTagGroup.diarySeq = seq;
+            diaryTagGroup.tagSeq = seq;
             diaryTagGroup.writerSeq = user.seq;
-          } else if (tag.type === 'U') {
-            diaryTagGroup.seq = tag.seq;
-          } else if (tag.type === 'D') {
-            await this.diaryTagGroupRepository.delete(tag.seq);
-            return;
+            await queryRunner.manager.getRepository(DiaryTagGroup).save(diaryTagGroup);
+          } else if (tagDto.type === 'U') {
+            diaryTagGroup.seq = tagDto.seq;
+            diaryTagGroup.tagSeq = tagDto.tagSeq;
+            // diaryTagGroup.writerSeq = user.seq;
+            await queryRunner.manager.getRepository(DiaryTagGroup).update({ seq: tagDto.seq }, diaryTagGroup);
+          } else if (tagDto.type === 'D') {
+            await this.diaryTagGroupRepository.delete(tagDto.seq);
           }
-          await queryRunner.manager.getRepository(DiaryTagGroup).save(diaryTagGroup);
         }
       }
 
@@ -150,7 +152,7 @@ export class DiaryService {
       await queryRunner.release();
     }
 
-    return { seq: savedDiary.seq };
+    return { seq };
   }
 
   async deleteDiary(seq: number, user: User) {
