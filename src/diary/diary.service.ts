@@ -129,13 +129,12 @@ export class DiaryService {
           const diaryTagGroup = new DiaryTagGroup();
           if (!tagDto.seq) {
             diaryTagGroup.diarySeq = seq;
-            diaryTagGroup.tagSeq = seq;
+            diaryTagGroup.tagSeq = tagDto.tagSeq;
             diaryTagGroup.writerSeq = user.seq;
             await queryRunner.manager.getRepository(DiaryTagGroup).save(diaryTagGroup);
           } else if (tagDto.type === 'U') {
             diaryTagGroup.seq = tagDto.seq;
             diaryTagGroup.tagSeq = tagDto.tagSeq;
-            // diaryTagGroup.writerSeq = user.seq;
             await queryRunner.manager.getRepository(DiaryTagGroup).update({ seq: tagDto.seq }, diaryTagGroup);
           } else if (tagDto.type === 'D') {
             await this.diaryTagGroupRepository.delete(tagDto.seq);

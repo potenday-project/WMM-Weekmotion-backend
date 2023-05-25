@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import { Tag } from './Tag';
 import { Diary } from './Diary';
@@ -14,7 +14,7 @@ export class DiaryTagGroup extends BaseEntity {
   @Column({ type: 'int', name: 'WRITER_SEQ' })
   writerSeq: number;
 
-  @OneToOne(() => Tag)
+  @ManyToOne(() => Tag)
   @JoinColumn([{ name: 'TAG_SEQ' }])
   tag: Tag;
 
