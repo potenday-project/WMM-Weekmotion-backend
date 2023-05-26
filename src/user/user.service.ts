@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../entites/User';
+import dayjs from 'dayjs';
+import { Diary } from '../entites/Diary';
 
 const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>, private datasource: DataSource) {}
+  constructor(@InjectRepository(User) private userRepository: Repository<User>, @InjectRepository(Diary) private diaryRepository: Repository<Diary>, private datasource: DataSource) {}
 
   async join(createUserDto: CreateUserDto) {
     const queryRunner = this.datasource.createQueryRunner();
@@ -33,7 +35,18 @@ export class UserService {
   }
 
   async getUserInfo(user: User) {
-    return await this.userRepository.createQueryBuilder('user').where('user.seq = :seq', { seq: user.seq }).getOne();
+    if (!user) {
+      throw new UnauthorizedException('로그인 후 이용해주세요.');
+    }
+    const today = dayjs(new Date()).format('YYYY-MM-DD');
+
+    const userInfo = await this.userRepository.createQueryBuilder('user').where('user.seq = :seq', { seq: user.seq }).getOne();
+    const todayDiary = await this.diaryRepository
+      .createQueryBuilder('diary')
+      .where('diary.writerSeq = :writerSeq', { writerSeq: user.seq })
+      .andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") = :today', { today: today })
+      .getOne();
+    return { ...userInfo, isWriteToday: todayDiary ? 'Y' : 'N' };
   }
 
   async checkUserId(id: string) {

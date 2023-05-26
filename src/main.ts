@@ -30,6 +30,7 @@ async function bootstrap() {
     .addBearerAuth()
     .addTag('user', '회원 관련')
     .addTag('auth', '회원 인증 관련')
+    .addTag('tag', '감정 태그 관련')
     .build();
   const document = SwaggerModule.createDocument(app, config, { ignoreGlobalPrefix: true });
   SwaggerModule.setup('docs', app, document);

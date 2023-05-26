@@ -13,6 +13,7 @@ import { DiaryTagGroup } from './entites/DiaryTagGroup';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { DiaryModule } from './diary/diary.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { DiaryModule } from './diary/diary.module';
     }),
     UserModule,
     AuthModule,
-    DiaryModule
+    DiaryModule,
+    TagModule
   ],
   controllers: [AppController],
   providers: [AppService]
