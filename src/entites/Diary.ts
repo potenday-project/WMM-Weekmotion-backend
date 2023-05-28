@@ -34,6 +34,6 @@ export class Diary extends BaseEntity {
   @JoinColumn([{ name: 'WRITER_SEQ' }])
   writer: User;
 
-  @OneToMany(() => DiaryTagGroup, TagGroup => TagGroup.diary)
+  @OneToMany(() => DiaryTagGroup, TagGroup => TagGroup.diary, { onDelete: 'CASCADE' })
   tags: DiaryTagGroup[];
 }

@@ -156,6 +156,7 @@ export class DiaryService {
 
   async deleteDiary(seq: number, user: User) {
     await this.getDiary(seq, user);
+    await this.diaryTagGroupRepository.delete({ diarySeq: seq });
     await this.diaryRepository.delete(seq);
 
     return { seq };
