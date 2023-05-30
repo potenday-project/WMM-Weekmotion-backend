@@ -124,7 +124,7 @@ export class DiaryService {
     try {
       await queryRunner.manager.getRepository(Diary).update({ seq: seq }, diary);
 
-      if (updateDiaryDto.tags.length > 0) {
+      if (updateDiaryDto.tags && updateDiaryDto.tags.length > 0) {
         for (const tagDto of updateDiaryDto.tags) {
           const diaryTagGroup = new DiaryTagGroup();
           if (!tagDto.seq) {
