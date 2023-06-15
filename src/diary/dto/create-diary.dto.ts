@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Diary } from '../../entites/Diary';
 
 export class CreateDiaryDto {
+  @ApiProperty({ description: '일기 일자', pattern: 'YYYY.MM.DD' })
+  diaryDate: string;
+
   @ApiProperty({ description: '타이틀' })
   title: string;
 
@@ -16,6 +19,7 @@ export class CreateDiaryDto {
 
   toEntity() {
     const entity = new Diary();
+    entity.diaryDate = this.diaryDate;
     entity.title = this.title;
     entity.contents = this.contents;
     entity.calenderYn = this.calenderYn;
