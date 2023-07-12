@@ -1,10 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import { User } from './User';
 import { DiaryTagGroup } from './DiaryTagGroup';
+import dayjs from 'dayjs';
 
 @Entity('DIARY')
 export class Diary extends BaseEntity {
+  @Column({
+    type: 'varchar',
+    length: 10,
+    name: 'DIARY_DATE'
+  })
+  diaryDate: string;
+
   @Column({ type: 'varchar', length: 250, name: 'TITLE' })
   title: string;
 

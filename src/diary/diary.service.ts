@@ -69,21 +69,21 @@ export class DiaryService {
       .andWhere('diary.calenderYn = :calenderYn', { calenderYn: searchParams.calenderYn });
 
     if (searchParams.yearMonth) {
-      const fromDate = dayjs(searchParams.yearMonth).startOf('month').format('YYYY-MM-DD');
-      const toDate = dayjs(searchParams.yearMonth).endOf('month').format('YYYY-MM-DD');
+      const fromDate = dayjs(searchParams.yearMonth).startOf('month').format('YYYY.MM.DD');
+      const toDate = dayjs(searchParams.yearMonth).endOf('month').format('YYYY.MM.DD');
 
-      qb.andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") >= :fromDate', { fromDate: fromDate });
-      qb.andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") <= :toDate', { toDate: toDate });
+      qb.andWhere('DATE_FORMAT(diary.diaryDate, "%Y.%m.%d") >= :fromDate', { fromDate: fromDate });
+      qb.andWhere('DATE_FORMAT(diary.diaryDate, "%Y.%m.%d") <= :toDate', { toDate: toDate });
     }
 
     if (searchParams.fromDate && searchParams.toDate) {
-      const fromDate = dayjs(searchParams.fromDate).startOf('date').format('YYYY-MM-DD');
-      const toDate = dayjs(searchParams.toDate).endOf('date').format('YYYY-MM-DD');
+      const fromDate = dayjs(searchParams.fromDate).startOf('date').format('YYYY.MM.DD');
+      const toDate = dayjs(searchParams.toDate).endOf('date').format('YYYY.MM.DD');
 
-      qb.andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") >= :fromDate', { fromDate: fromDate });
-      qb.andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") <= :toDate', { toDate: toDate });
+      qb.andWhere('DATE_FORMAT(diary.diaryDate, "%Y.%m.%d") >= :fromDate', { fromDate: fromDate });
+      qb.andWhere('DATE_FORMAT(diary.diaryDate, "%Y.%m.%d") <= :toDate', { toDate: toDate });
     }
-    return qb.orderBy('diary.regDate', 'DESC').getMany();
+    return qb.orderBy('diary.diaryDate', 'DESC').getMany();
   }
 
   async getDiary(seq: number, user: User) {
@@ -124,7 +124,7 @@ export class DiaryService {
     try {
       await queryRunner.manager.getRepository(Diary).update({ seq: seq }, diary);
 
-      if (updateDiaryDto.tags.length > 0) {
+      if (updateDiaryDto.tags && updateDiaryDto.tags.length > 0) {
         for (const tagDto of updateDiaryDto.tags) {
           const diaryTagGroup = new DiaryTagGroup();
           if (!tagDto.seq) {

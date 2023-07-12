@@ -39,13 +39,13 @@ export class UserService {
     if (!user) {
       throw new UnauthorizedException('로그인 후 이용해주세요.');
     }
-    const today = dayjs(new Date()).format('YYYY-MM-DD');
+    const today = dayjs(new Date()).format('YYYY.MM.DD');
 
     const userInfo = await this.userRepository.createQueryBuilder('user').where('user.seq = :seq', { seq: user.seq }).getOne();
     const todayDiary = await this.diaryRepository
       .createQueryBuilder('diary')
       .where('diary.writerSeq = :writerSeq', { writerSeq: user.seq })
-      .andWhere('DATE_FORMAT(diary.regDate, "%Y-%m-%d") = :today', { today: today })
+      .andWhere('DATE_FORMAT(diary.diaryDate, "%Y.%m.%d") = :today', { today: today })
       .getOne();
     return { ...userInfo, isWriteToday: todayDiary ? 'Y' : 'N' };
   }
