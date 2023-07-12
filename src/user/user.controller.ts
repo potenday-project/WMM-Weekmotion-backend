@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserDecorator } from '../common/decorators/user.decorator';
 import { User } from '../entites/User';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -27,5 +28,12 @@ export class UserController {
   @Get('check/id/:id')
   checkUserId(@Param('id') id: string) {
     return this.userService.checkUserId(id);
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '비밀변호 변경' })
+  @Patch('password')
+  updateUserPassword(@Body() updateUserPasswordDto: UpdateUserPasswordDto, @UserDecorator() user: User) {
+    return this.userService.updateUserPassword(updateUserPasswordDto, user);
   }
 }

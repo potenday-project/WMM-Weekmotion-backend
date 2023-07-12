@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from '../entites/User';
 import dayjs from 'dayjs';
 import { Diary } from '../entites/Diary';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 
 const bcrypt = require('bcrypt');
 
@@ -55,5 +56,20 @@ export class UserService {
       return { duplication: true };
     }
     return { duplication: false };
+  }
+
+  async updateUserPassword(updateUserPasswordDto: UpdateUserPasswordDto, user: User) {
+    const userInfo = await this.userRepository.createQueryBuilder('user').where('user.seq = :seq', { seq: user.seq }).addSelect('user.password').getOne();
+    const passwordCompareResult = await bcrypt.compare(updateUserPasswordDto.password, userInfo.password);
+
+    if (!passwordCompareResult) {
+      throw new UnauthorizedException('일치하지 않은 비밀번호 입니다.');
+    }
+
+    const encryptedNewPassword = await bcrypt.hash(updateUserPasswordDto.newPassword, 12);
+
+    await this.userRepository.createQueryBuilder('user').update().set({ password: encryptedNewPassword }).where({ seq: user.seq }).execute();
+
+    return { seq: user.seq };
   }
 }
